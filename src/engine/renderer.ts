@@ -119,15 +119,17 @@ export function renderVisualization(
   ctx.fillStyle = bgGrad;
   ctx.fillRect(0, 0, width, height);
 
+  const isLight = Boolean(palette.isLight);
+
   // Subtle architectural framing hairline
   const pad = Math.max(18, Math.min(width, height) * 0.025);
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.045)';
+  ctx.strokeStyle = isLight ? 'rgba(28, 25, 23, 0.10)' : 'rgba(255, 255, 255, 0.045)';
   ctx.lineWidth = 1;
   ctx.strokeRect(pad, pad, width - pad * 2, height - pad * 2);
 
   // Corner registration ticks (museum print aesthetic)
   const tick = 10;
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.16)';
+  ctx.strokeStyle = isLight ? 'rgba(28, 25, 23, 0.32)' : 'rgba(255, 255, 255, 0.16)';
   ctx.beginPath();
   // Top-left
   ctx.moveTo(pad, pad + tick);
@@ -219,9 +221,9 @@ export function renderVisualization(
     const geoMode = projection === 'manifold' ? 'winkel' : projection;
 
     // Subtle continental fill + fine coastal contour
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.018)';
+    ctx.fillStyle = isLight ? 'rgba(28, 25, 23, 0.035)' : 'rgba(255, 255, 255, 0.018)';
     ctx.strokeStyle = palette.coastStroke;
-    ctx.lineWidth = 0.85;
+    ctx.lineWidth = isLight ? 0.95 : 0.85;
 
     WORLD_CONTINENTS.forEach((poly) => {
       ctx.beginPath();
@@ -263,9 +265,9 @@ export function renderVisualization(
     });
   }
 
-  // 5. Render Fiber Corridors with Multi-Pass Optical Glow
+  // 5. Render Fiber Corridors with Multi-Pass Optical Glow (Dark) / Ink Wash (Light)
   ctx.save();
-  ctx.globalCompositeOperation = 'lighter';
+  ctx.globalCompositeOperation = isLight ? 'source-over' : 'lighter';
 
   FIBER_CORRIDORS.forEach((corridor, idx) => {
     const src = nodeMap[corridor.source];
@@ -338,7 +340,7 @@ export function renderVisualization(
 
       const glow = ctx.createRadialGradient(px, py, 0, px, py, pRadius * 3.8);
       glow.addColorStop(0, palette.packetColor);
-      glow.addColorStop(1, 'rgba(0,0,0,0)');
+      glow.addColorStop(1, isLight ? 'rgba(255,255,255,0)' : 'rgba(0,0,0,0)');
       ctx.save();
       ctx.globalAlpha = pAlpha;
       ctx.fillStyle = glow;
@@ -346,7 +348,7 @@ export function renderVisualization(
       ctx.arc(px, py, pRadius * 3.8, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.fillStyle = palette.nodeCore;
+      ctx.fillStyle = isLight ? palette.packetColor : palette.nodeCore;
       ctx.beginPath();
       ctx.arc(px, py, pRadius * 0.75, 0, Math.PI * 2);
       ctx.fill();
@@ -374,14 +376,14 @@ export function renderVisualization(
     ctx.save();
     ctx.globalAlpha = nodeAlpha;
 
-    // Outer radial bloom
+    // Outer radial bloom (Dark) / soft pigment halo (Light)
     const bloomR = radius * (isFocus ? 7.5 : node.tier === 'supercluster' ? 5.2 : 3.8);
     ctx.save();
-    ctx.globalCompositeOperation = 'lighter';
+    ctx.globalCompositeOperation = isLight ? 'source-over' : 'lighter';
     const bloom = ctx.createRadialGradient(x, y, 0, x, y, bloomR);
-    bloom.addColorStop(0, nodeColor);
-    bloom.addColorStop(0.35, `${nodeColor}44`);
-    bloom.addColorStop(1, 'rgba(0,0,0,0)');
+    bloom.addColorStop(0, isLight ? `${nodeColor}36` : nodeColor);
+    bloom.addColorStop(0.35, isLight ? `${nodeColor}18` : `${nodeColor}44`);
+    bloom.addColorStop(1, isLight ? 'rgba(255,255,255,0)' : 'rgba(0,0,0,0)');
     ctx.fillStyle = bloom;
     ctx.beginPath();
     ctx.arc(x, y, bloomR, 0, Math.PI * 2);
@@ -443,8 +445,8 @@ export function renderVisualization(
     // Bottom scrim for legibility
     const scrimTop = isNarrow ? height * 0.68 : height * 0.72;
     const scrim = ctx.createLinearGradient(0, scrimTop, 0, height);
-    scrim.addColorStop(0, 'rgba(0,0,0,0)');
-    scrim.addColorStop(1, 'rgba(4, 5, 9, 0.90)');
+    scrim.addColorStop(0, isLight ? 'rgba(248, 246, 241, 0)' : 'rgba(0,0,0,0)');
+    scrim.addColorStop(1, isLight ? 'rgba(244, 241, 234, 0.94)' : 'rgba(4, 5, 9, 0.90)');
     ctx.fillStyle = scrim;
     ctx.fillRect(pad + 1, scrimTop, width - pad * 2 - 2, height - scrimTop - pad - 1);
 

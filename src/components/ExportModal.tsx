@@ -173,28 +173,28 @@ export const ExportModal: React.FC<ExportModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 bg-stone-900/50 dark:bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
       role="dialog"
       aria-modal="true"
       aria-labelledby="export-modal-title"
     >
-      <div className="bg-[#0B0F18] border border-white/15 rounded-lg max-w-4xl w-full overflow-hidden shadow-2xl">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/[0.08]">
+      <div className="bg-[#FBF9F5] dark:bg-[#0B0F18] border border-stone-300 dark:border-white/15 rounded-lg max-w-4xl w-full overflow-hidden shadow-2xl">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-stone-200 dark:border-white/[0.08]">
           <div>
             <h2
               id="export-modal-title"
-              className="font-editorial text-2xl font-medium text-slate-100"
+              className="font-editorial text-2xl font-medium text-stone-900 dark:text-slate-100"
             >
               Export High-Resolution LinkedIn Plate
             </h2>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-stone-500 dark:text-slate-400 mt-0.5">
               Rendered offscreen at native {spec.exportWidth} × {spec.exportHeight} px print fidelity
             </p>
           </div>
           <button
             onClick={onClose}
             aria-label="Close export modal"
-            className="p-2 text-slate-400 hover:text-slate-100 transition-colors cursor-pointer"
+            className="p-2 text-stone-500 dark:text-slate-400 hover:text-stone-900 dark:hover:text-slate-100 transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -202,7 +202,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6 p-6">
           {/* Preview Plate */}
-          <div className="md:col-span-7 bg-[#05070C] border border-white/[0.08] rounded-md p-4 flex items-center justify-center min-h-[300px]">
+          <div className="md:col-span-7 bg-[#E9E5DC] dark:bg-[#05070C] border border-stone-200 dark:border-white/[0.08] rounded-md p-4 flex items-center justify-center min-h-[300px]">
             <canvas
               ref={previewRef}
               className="max-w-full max-h-[380px] w-auto h-auto rounded-sm shadow-lg"
@@ -213,7 +213,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
           <div className="md:col-span-5 flex flex-col justify-between gap-5">
             <div className="space-y-4">
               <div>
-                <div className="text-xs font-medium text-slate-400 mb-2">
+                <div className="text-xs font-medium text-stone-600 dark:text-slate-400 mb-2">
                   Target LinkedIn Format
                 </div>
                 <div className="grid grid-cols-2 gap-1.5">
@@ -226,12 +226,12 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                         onClick={() => onAspectChange(id)}
                         className={`px-3 py-2 text-left rounded-md border text-xs transition-colors cursor-pointer ${
                           active
-                            ? 'bg-white/10 border-white/25 text-slate-100 font-medium'
-                            : 'bg-transparent border-white/[0.08] text-slate-400 hover:text-slate-200'
+                            ? 'bg-stone-900/[0.08] dark:bg-white/10 border-stone-400 dark:border-white/25 text-stone-900 dark:text-slate-100 font-medium'
+                            : 'bg-transparent border-stone-200 dark:border-white/[0.08] text-stone-600 dark:text-slate-400 hover:text-stone-900 dark:hover:text-slate-200'
                         }`}
                       >
                         <div>{item.label}</div>
-                        <div className="font-telemetry text-[11px] text-slate-500 mt-0.5">
+                        <div className="font-telemetry text-[11px] text-stone-500 dark:text-slate-500 mt-0.5">
                           {item.exportWidth}×{item.exportHeight}
                         </div>
                       </button>
@@ -242,17 +242,17 @@ export const ExportModal: React.FC<ExportModalProps> = ({
 
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-xs font-medium text-slate-400">
+                  <span className="text-xs font-medium text-stone-600 dark:text-slate-400">
                     Suggested LinkedIn Caption
                   </span>
                   <button
                     onClick={handleCopyCaption}
-                    className="inline-flex items-center gap-1 text-xs text-slate-300 hover:text-white transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1 text-xs text-stone-700 dark:text-slate-300 hover:text-stone-950 dark:hover:text-white transition-colors cursor-pointer"
                   >
                     {copiedCaption ? (
                       <>
-                        <Check className="w-3.5 h-3.5 text-emerald-400" />
-                        <span className="text-emerald-400">Copied</span>
+                        <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                        <span className="text-emerald-600 dark:text-emerald-400">Copied</span>
                       </>
                     ) : (
                       <>
@@ -266,21 +266,21 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                   readOnly
                   value={linkedInCaption}
                   rows={6}
-                  className="w-full bg-[#06080D] border border-white/[0.08] rounded-md p-3 text-xs text-slate-300 leading-relaxed focus:outline-none resize-none"
+                  className="w-full bg-white dark:bg-[#06080D] border border-stone-200 dark:border-white/[0.08] rounded-md p-3 text-xs text-stone-700 dark:text-slate-300 leading-relaxed focus:outline-none resize-none"
                 />
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/[0.08]">
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-stone-200 dark:border-white/[0.08]">
               <button
                 onClick={onClose}
-                className="px-4 py-2 text-xs text-slate-300 hover:text-white transition-colors cursor-pointer"
+                className="px-4 py-2 text-xs text-stone-600 dark:text-slate-300 hover:text-stone-950 dark:hover:text-white transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDownloadPng}
-                className="inline-flex items-center gap-2 px-4 py-2 text-xs font-medium bg-slate-100 text-slate-950 rounded-md hover:bg-white transition-colors cursor-pointer whitespace-nowrap shrink-0"
+                className="inline-flex items-center gap-2 px-4 py-2 text-xs font-medium bg-stone-900 dark:bg-slate-100 text-white dark:text-slate-950 rounded-md hover:bg-stone-800 dark:hover:bg-white transition-colors cursor-pointer whitespace-nowrap shrink-0"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span>Download PNG</span>

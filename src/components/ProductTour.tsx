@@ -3,8 +3,10 @@ import {
   ChevronLeft,
   ChevronRight,
   Download,
+  Moon,
   Pause,
   Play,
+  Sun,
   X,
 } from 'lucide-react';
 import { FIBER_CORRIDORS, INFRA_NODES } from '../data/infrastructure';
@@ -17,20 +19,42 @@ export interface TourStep {
   highlightNote: string;
 }
 
+export const TOUR_SPECIMEN_HUBS: {
+  id: string;
+  label: string;
+  note: string;
+}[] = [
+  {
+    id: 'sin',
+    label: 'Singapore (SIN)',
+    note: 'Specimen Focused: Singapore Jurong (26 Subsea Landings)',
+  },
+  {
+    id: 'iad',
+    label: 'Northern Virginia (IAD)',
+    note: 'Specimen Focused: Northern Virginia (3,680 MW Epicenter)',
+  },
+  {
+    id: 'fra',
+    label: 'Frankfurt (FRA)',
+    note: 'Specimen Focused: Frankfurt Main (DE-CIX Continental Spine)',
+  },
+];
+
 export const PRODUCT_TOUR_STEPS: TourStep[] = [
   {
     id: 'thesis-canvas',
     chapter: '01 · Cartographic Thesis',
     title: 'Is This a Map?',
-    description: `Visualizing ${INFRA_NODES.length} hyperscale compute regions and ${FIBER_CORRIDORS.length} submarine & terrestrial optical arteries on a minimalist dark canvas—blending precision geodesy with modern generative network art.`,
-    highlightNote: 'Winkel Tripel Geodesic · 18% Abstraction',
+    description: `Visualizing ${INFRA_NODES.length} hyperscale compute regions and ${FIBER_CORRIDORS.length} submarine & terrestrial optical arteries on a museum-grade canvas—blending precision geodesy with modern network art.`,
+    highlightNote: 'Winkel Tripel Geodesic · 18% Abstraction · Archival Vellum',
   },
   {
     id: 'abstraction-morph',
     chapter: '02 · Spatial Abstraction',
     title: 'Dissolving Borders into Latency',
     description:
-      'As Spatial Abstraction increases toward 85%, geopolitical coastlines recede into quiet astronomical hairlines while data centers drift toward their true topological gravity.',
+      'As Spatial Abstraction increases toward 85%, geopolitical coastlines recede into quiet architectural hairlines while data centers drift toward their true topological gravity.',
     highlightNote: 'Spatial Abstraction: 85% · Force-Embedded Topology',
   },
   {
@@ -39,7 +63,7 @@ export const PRODUCT_TOUR_STEPS: TourStep[] = [
     title: 'Polar Azimuthal Projection',
     description:
       'Centering the planet on the North Pole transforms transatlantic and transpacific fiber spines into sweeping orbital arcs—challenging conventional Atlantic-centric cartography.',
-    highlightNote: 'North-Polar Azimuthal Disc · Abyssal Cyan Palette',
+    highlightNote: 'North-Polar Azimuthal Disc · Gallery Cobalt Palette',
   },
   {
     id: 'operator-isolation',
@@ -54,15 +78,15 @@ export const PRODUCT_TOUR_STEPS: TourStep[] = [
     chapter: '05 · Node Telemetry',
     title: 'Deep Facility Specimen Inspection',
     description:
-      'Clicking or hovering any glowing node reveals its power footprint (MW), PUE efficiency, renewable energy share, liquid-cooled rack density, IXP fabric, and direct fiber links.',
-    highlightNote: 'Specimen Focused: Singapore Jurong (26 Subsea Landings)',
+      'Clicking any glowing node inspects its power footprint (MW), PUE efficiency, renewable energy share, rack density, IXP fabric, and direct fiber links. Watch or click across three major planetary hubs below.',
+    highlightNote: TOUR_SPECIMEN_HUBS[0].note,
   },
   {
     id: 'topology-ledger',
     chapter: '06 · Global Compute Index',
     title: 'Structured Facility Ledger',
     description:
-      'Switch to the Topology tab to inspect every global cluster in tabular precision—power capacity, renewable percentage, kW/rack density, and network degree—and click any row to jump back to it on the canvas.',
+      'Switch to the Topology tab to inspect every global cluster in tabular precision—power capacity, clean energy %, kW/rack density, and network degree—and click any row to jump back to it on the canvas.',
     highlightNote: 'Tab: Topology · Tabular Telemetry & Regional Filtering',
   },
   {
@@ -71,7 +95,7 @@ export const PRODUCT_TOUR_STEPS: TourStep[] = [
     title: 'Subsea & Terrestrial Arteries',
     description:
       'The Corridors view catalogs every major submarine and terrestrial trunk—from Grace Hopper and MAREA to 2Africa and Equiano—by design bandwidth (Tbps), distance, and millisecond latency.',
-    highlightNote: 'Tab: Corridors · 100+ Global Optical Trunks',
+    highlightNote: `Tab: Corridors · ${FIBER_CORRIDORS.length} Global Optical Trunks`,
   },
   {
     id: 'linkedin-export',
@@ -87,6 +111,10 @@ interface ProductTourProps {
   isOpen: boolean;
   stepIndex: number;
   isAutoPlaying: boolean;
+  theme: 'light' | 'dark';
+  selectedNodeId: string | null;
+  onSelectSpecimen: (nodeId: string) => void;
+  onToggleTheme: () => void;
   onToggleAutoPlay: () => void;
   onStepChange: (index: number) => void;
   onClose: () => void;
@@ -97,22 +125,53 @@ export const ProductTour: React.FC<ProductTourProps> = ({
   isOpen,
   stepIndex,
   isAutoPlaying,
+  theme,
+  selectedNodeId,
+  onSelectSpecimen,
+  onToggleTheme,
   onToggleAutoPlay,
   onStepChange,
   onClose,
   onOpenExport,
 }) => {
+  const selectedNodeRef = React.useRef(selectedNodeId);
+  selectedNodeRef.current = selectedNodeId;
+
+  const onSelectSpecimenRef = React.useRef(onSelectSpecimen);
+  onSelectSpecimenRef.current = onSelectSpecimen;
+
+  const onStepChangeRef = React.useRef(onStepChange);
+  onStepChangeRef.current = onStepChange;
+
+  const onToggleAutoPlayRef = React.useRef(onToggleAutoPlay);
+  onToggleAutoPlayRef.current = onToggleAutoPlay;
+
+  // Cycle through the 3 showcase hubs smoothly when on Step 5 without resetting parent timers
+  useEffect(() => {
+    if (!isOpen || stepIndex !== 4) return;
+    const cycleTimer = setInterval(() => {
+      const currentIdx = TOUR_SPECIMEN_HUBS.findIndex(
+        (h) => h.id === selectedNodeRef.current
+      );
+      const nextIdx = (currentIdx + 1) % TOUR_SPECIMEN_HUBS.length;
+      onSelectSpecimenRef.current(TOUR_SPECIMEN_HUBS[nextIdx].id);
+    }, 2200);
+    return () => clearInterval(cycleTimer);
+  }, [isOpen, stepIndex]);
+
+  // Overall auto-play advance timer (gives Step 5 7s dwell time to show all 3 points cleanly)
   useEffect(() => {
     if (!isOpen || !isAutoPlaying) return;
-    const timer = setInterval(() => {
+    const dwellMs = stepIndex === 4 ? 7000 : 4600;
+    const timer = setTimeout(() => {
       if (stepIndex < PRODUCT_TOUR_STEPS.length - 1) {
-        onStepChange(stepIndex + 1);
+        onStepChangeRef.current(stepIndex + 1);
       } else {
-        onToggleAutoPlay();
+        onToggleAutoPlayRef.current();
       }
-    }, 4600);
-    return () => clearInterval(timer);
-  }, [isOpen, isAutoPlaying, stepIndex, onStepChange, onToggleAutoPlay]);
+    }, dwellMs);
+    return () => clearTimeout(timer);
+  }, [isOpen, isAutoPlaying, stepIndex]);
 
   if (!isOpen) return null;
 
@@ -120,8 +179,18 @@ export const ProductTour: React.FC<ProductTourProps> = ({
   const isFirst = stepIndex === 0;
   const isLast = stepIndex === PRODUCT_TOUR_STEPS.length - 1;
 
+  const activeSpecimen =
+    stepIndex === 4
+      ? TOUR_SPECIMEN_HUBS.find((h) => h.id === selectedNodeId)
+      : null;
+  const activeHighlight = activeSpecimen
+    ? activeSpecimen.note
+    : stepIndex === 4 && selectedNodeId
+    ? `Specimen Focused: ${selectedNodeId.toUpperCase()}`
+    : step.highlightNote;
+
   return (
-    <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-40 w-[calc(100%-2rem)] max-w-2xl bg-[#0B0F18]/95 border border-white/20 rounded-lg shadow-2xl backdrop-blur-md p-5">
+    <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-40 w-[calc(100%-2rem)] max-w-2xl bg-[#FBF9F5]/96 dark:bg-[#0B0F18]/95 border border-stone-300 dark:border-white/20 rounded-lg shadow-2xl backdrop-blur-md p-5">
       {/* Progress bar */}
       <div className="flex items-center gap-1 mb-3.5">
         {PRODUCT_TOUR_STEPS.map((s, idx) => (
@@ -130,7 +199,9 @@ export const ProductTour: React.FC<ProductTourProps> = ({
             onClick={() => onStepChange(idx)}
             aria-label={`Go to tour step ${idx + 1}: ${s.title}`}
             className={`h-1 flex-1 rounded-full transition-colors cursor-pointer ${
-              idx <= stepIndex ? 'bg-slate-100' : 'bg-white/15 hover:bg-white/30'
+              idx <= stepIndex
+                ? 'bg-stone-900 dark:bg-slate-100'
+                : 'bg-stone-300 dark:bg-white/15 hover:bg-stone-400 dark:hover:bg-white/30'
             }`}
           />
         ))}
@@ -138,7 +209,7 @@ export const ProductTour: React.FC<ProductTourProps> = ({
 
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <div className="flex items-center gap-2 text-[11px] font-telemetry text-slate-400">
+          <div className="flex items-center gap-2 text-[11px] font-telemetry text-stone-500 dark:text-slate-400">
             <span>{step.chapter}</span>
             <span aria-hidden="true">·</span>
             <span>
@@ -146,7 +217,7 @@ export const ProductTour: React.FC<ProductTourProps> = ({
               {String(PRODUCT_TOUR_STEPS.length).padStart(2, '0')}
             </span>
           </div>
-          <h3 className="font-editorial text-2xl font-medium text-slate-100 mt-0.5 leading-snug">
+          <h3 className="font-editorial text-2xl font-medium text-stone-900 dark:text-slate-100 mt-0.5 leading-snug">
             {step.title}
           </h3>
         </div>
@@ -154,43 +225,85 @@ export const ProductTour: React.FC<ProductTourProps> = ({
         <button
           onClick={onClose}
           aria-label="Exit product tour"
-          className="p-1.5 text-slate-400 hover:text-slate-100 transition-colors cursor-pointer shrink-0"
+          className="p-1.5 text-stone-500 dark:text-slate-400 hover:text-stone-900 dark:hover:text-slate-100 transition-colors cursor-pointer shrink-0"
         >
           <X className="w-4 h-4" />
         </button>
       </div>
 
-      <p className="text-xs sm:text-[13px] text-slate-300 leading-relaxed mt-2">
+      <p className="text-xs sm:text-[13px] text-stone-700 dark:text-slate-300 leading-relaxed mt-2">
         {step.description}
       </p>
 
-      <div className="mt-3 text-[11px] font-telemetry text-slate-400">
-        Active View: <span className="text-slate-200">{step.highlightNote}</span>
+      {/* Step 5 multi-point selector */}
+      {stepIndex === 4 && (
+        <div className="mt-3 flex flex-wrap items-center gap-1.5">
+          {TOUR_SPECIMEN_HUBS.map((hub) => {
+            const active = selectedNodeId === hub.id;
+            return (
+              <button
+                key={hub.id}
+                onClick={() => onSelectSpecimen(hub.id)}
+                className={`px-3 py-1.5 text-xs rounded-md border transition-colors cursor-pointer whitespace-nowrap shrink-0 ${
+                  active
+                    ? 'bg-stone-900 dark:bg-slate-100 border-stone-900 dark:border-slate-100 text-white dark:text-slate-950 font-medium'
+                    : 'bg-transparent border-stone-300 dark:border-white/15 text-stone-700 dark:text-slate-300 hover:border-stone-500 dark:hover:border-white/35'
+                }`}
+              >
+                {hub.label}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      <div className="mt-3 text-[11px] font-telemetry text-stone-500 dark:text-slate-400">
+        Active View:{' '}
+        <span className="text-stone-900 dark:text-slate-200">{activeHighlight}</span>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 mt-4 pt-3.5 border-t border-white/[0.08]">
-        <button
-          onClick={onToggleAutoPlay}
-          className="inline-flex items-center gap-1.5 text-xs text-slate-300 hover:text-white transition-colors cursor-pointer"
-        >
-          {isAutoPlaying ? (
-            <>
-              <Pause className="w-3.5 h-3.5" />
-              <span>Pause Auto-Tour</span>
-            </>
-          ) : (
-            <>
-              <Play className="w-3.5 h-3.5" />
-              <span>Auto-Play Tour</span>
-            </>
-          )}
-        </button>
+      <div className="flex flex-wrap items-center justify-between gap-3 mt-4 pt-3.5 border-t border-stone-200 dark:border-white/[0.08]">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={onToggleAutoPlay}
+            className="inline-flex items-center gap-1.5 text-xs text-stone-700 dark:text-slate-300 hover:text-stone-950 dark:hover:text-white transition-colors cursor-pointer"
+          >
+            {isAutoPlaying ? (
+              <>
+                <Pause className="w-3.5 h-3.5" />
+                <span>Pause Auto-Tour</span>
+              </>
+            ) : (
+              <>
+                <Play className="w-3.5 h-3.5" />
+                <span>Auto-Play Tour</span>
+              </>
+            )}
+          </button>
+
+          <button
+            onClick={onToggleTheme}
+            className="inline-flex items-center gap-1.5 text-xs text-stone-600 dark:text-slate-400 hover:text-stone-950 dark:hover:text-white transition-colors cursor-pointer"
+          >
+            {theme === 'light' ? (
+              <>
+                <Moon className="w-3.5 h-3.5" />
+                <span>Switch to Dark</span>
+              </>
+            ) : (
+              <>
+                <Sun className="w-3.5 h-3.5" />
+                <span>Switch to Light</span>
+              </>
+            )}
+          </button>
+        </div>
 
         <div className="flex items-center gap-2">
           <button
             onClick={() => onStepChange(Math.max(0, stepIndex - 1))}
             disabled={isFirst}
-            className="inline-flex items-center gap-1 px-3 py-1.5 text-xs rounded-md border border-white/15 text-slate-200 hover:bg-white/[0.06] disabled:opacity-35 disabled:cursor-not-allowed transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1 px-3 py-1.5 text-xs rounded-md border border-stone-300 dark:border-white/15 text-stone-800 dark:text-slate-200 hover:bg-stone-100 dark:hover:bg-white/[0.06] disabled:opacity-35 disabled:cursor-not-allowed transition-colors cursor-pointer"
           >
             <ChevronLeft className="w-3.5 h-3.5" />
             <span>Previous</span>
@@ -202,7 +315,7 @@ export const ProductTour: React.FC<ProductTourProps> = ({
                 onClose();
                 onOpenExport();
               }}
-              className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-medium bg-slate-100 text-slate-950 rounded-md hover:bg-white transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-medium bg-stone-900 dark:bg-slate-100 text-white dark:text-slate-950 rounded-md hover:bg-stone-800 dark:hover:bg-white transition-colors cursor-pointer"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Open LinkedIn Export</span>
@@ -210,7 +323,7 @@ export const ProductTour: React.FC<ProductTourProps> = ({
           ) : (
             <button
               onClick={() => onStepChange(stepIndex + 1)}
-              className="inline-flex items-center gap-1 px-4 py-1.5 text-xs font-medium bg-slate-100 text-slate-950 rounded-md hover:bg-white transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1 px-4 py-1.5 text-xs font-medium bg-stone-900 dark:bg-slate-100 text-white dark:text-slate-950 rounded-md hover:bg-stone-800 dark:hover:bg-white transition-colors cursor-pointer"
             >
               <span>Next</span>
               <ChevronRight className="w-3.5 h-3.5" />

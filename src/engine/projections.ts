@@ -2,7 +2,13 @@ import { FIBER_CORRIDORS, INFRA_NODES, InfraNode, ProviderId } from '../data/inf
 
 export type ProjectionMode = 'winkel' | 'azimuthal' | 'orbital' | 'manifold';
 
-export type PaletteId = 'obsidian-gold' | 'abyssal-cyan' | 'monochrome-silver' | 'thermal-spectrum';
+export type PaletteId =
+  | 'obsidian-gold'
+  | 'abyssal-cyan'
+  | 'monochrome-silver'
+  | 'thermal-spectrum'
+  | 'archival-vellum'
+  | 'gallery-cobalt';
 
 export type FrameAspectId = 'viewport' | 'linkedin-landscape' | 'linkedin-portrait' | 'linkedin-square';
 
@@ -10,6 +16,7 @@ export interface ExhibitionPalette {
   id: PaletteId;
   name: string;
   subtitle: string;
+  isLight?: boolean;
   bgInner: string;
   bgOuter: string;
   coastStroke: string;
@@ -116,6 +123,54 @@ export const PALETTES: Record<PaletteId, ExhibitionPalette> = {
     textPrimary: '#F8FAFC',
     textMuted: 'rgba(203, 213, 225, 0.56)',
     accent: '#FB7185',
+  },
+  'archival-vellum': {
+    id: 'archival-vellum',
+    name: 'Archival Vellum',
+    subtitle: 'Warm parchment plate with bronze & lapis ink',
+    isLight: true,
+    bgInner: '#FCFBF8',
+    bgOuter: '#F2EFE7',
+    coastStroke: 'rgba(41, 37, 36, 0.24)',
+    graticuleStroke: 'rgba(68, 64, 60, 0.09)',
+    edgeBase: 'rgba(146, 64, 14, 0.36)',
+    edgeHighlight: '#B45309',
+    packetColor: '#1E3A8A',
+    nodeCore: '#1C1917',
+    providerColors: {
+      aws: '#B45309',
+      gcp: '#0369A1',
+      azure: '#1D4ED8',
+      meta: '#047857',
+      backbone: '#292524',
+    },
+    textPrimary: '#1C1917',
+    textMuted: 'rgba(41, 37, 36, 0.62)',
+    accent: '#9A3412',
+  },
+  'gallery-cobalt': {
+    id: 'gallery-cobalt',
+    name: 'Gallery Cobalt',
+    subtitle: 'Crisp museum stark white with cobalt filaments',
+    isLight: true,
+    bgInner: '#FFFFFF',
+    bgOuter: '#F1F5F9',
+    coastStroke: 'rgba(15, 23, 42, 0.22)',
+    graticuleStroke: 'rgba(15, 23, 42, 0.08)',
+    edgeBase: 'rgba(30, 58, 138, 0.34)',
+    edgeHighlight: '#1D4ED8',
+    packetColor: '#0284C7',
+    nodeCore: '#0F172A',
+    providerColors: {
+      aws: '#D97706',
+      gcp: '#0284C7',
+      azure: '#1D4ED8',
+      meta: '#059669',
+      backbone: '#0F172A',
+    },
+    textPrimary: '#0F172A',
+    textMuted: 'rgba(15, 23, 42, 0.60)',
+    accent: '#1E3A8A',
   },
 };
 

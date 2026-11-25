@@ -252,13 +252,13 @@ export const ArtworkViewport: React.FC<ArtworkViewportProps> = ({
   return (
     <div
       ref={stageRef}
-      className="relative flex-1 bg-[#040509] flex items-center justify-center overflow-hidden min-h-[520px]"
+      className="relative flex-1 bg-[#E9E5DC] dark:bg-[#040509] flex items-center justify-center overflow-hidden min-h-[520px]"
     >
       {/* Framed Artwork Canvas */}
       <div
         className={`relative transition-shadow duration-200 ${
           aspectSpec.ratio !== null
-            ? 'border border-white/15 shadow-2xl shadow-black/80'
+            ? 'border border-stone-300 dark:border-white/15 shadow-2xl shadow-stone-900/15 dark:shadow-black/80'
             : ''
         }`}
         style={{ width: canvasW, height: canvasH }}
@@ -281,7 +281,7 @@ export const ArtworkViewport: React.FC<ArtworkViewportProps> = ({
         />
 
         {/* Top-Left Minimal Viewport Coordinate & Frame Probe */}
-        <div className="pointer-events-none absolute top-5 left-6 flex items-center gap-3 text-[11px] font-telemetry text-slate-400/80">
+        <div className="pointer-events-none absolute top-5 left-6 flex items-center gap-3 text-[11px] font-telemetry text-stone-600/90 dark:text-slate-400/80">
           <span>
             {aspectSpec.ratio === null
               ? `${Math.round(canvasW)} × ${Math.round(canvasH)}`
@@ -297,29 +297,29 @@ export const ArtworkViewport: React.FC<ArtworkViewportProps> = ({
           )}
         </div>
 
-        {/* Bottom-Right Zoom & Framing Controls (placed subtly at top-right so bottom placard stays clean) */}
-        <div className="absolute top-4 right-5 flex items-center gap-1 bg-[#090C13]/85 border border-white/10 rounded-md p-1 backdrop-blur-sm">
+        {/* Top-Right Zoom & Framing Controls */}
+        <div className="absolute top-4 right-5 flex items-center gap-1 bg-white/90 dark:bg-[#090C13]/85 border border-stone-300 dark:border-white/10 rounded-md p-1 backdrop-blur-sm shadow-xs">
           <button
             onClick={() => onZoomChange(Math.max(0.65, zoom / 1.2))}
             aria-label="Zoom out"
-            className="p-1.5 text-slate-400 hover:text-slate-100 transition-colors cursor-pointer"
+            className="p-1.5 text-stone-600 dark:text-slate-400 hover:text-stone-950 dark:hover:text-slate-100 transition-colors cursor-pointer"
           >
             <Minus className="w-3.5 h-3.5" />
           </button>
-          <span className="font-telemetry text-[11px] text-slate-300 px-1.5 min-w-[44px] text-center">
+          <span className="font-telemetry text-[11px] text-stone-800 dark:text-slate-300 px-1.5 min-w-[44px] text-center">
             {Math.round(zoom * 100)}%
           </span>
           <button
             onClick={() => onZoomChange(Math.min(4.5, zoom * 1.2))}
             aria-label="Zoom in"
-            className="p-1.5 text-slate-400 hover:text-slate-100 transition-colors cursor-pointer"
+            className="p-1.5 text-stone-600 dark:text-slate-400 hover:text-stone-950 dark:hover:text-slate-100 transition-colors cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
           </button>
           <button
             onClick={onResetView}
             aria-label="Fit canvas"
-            className="p-1.5 text-slate-400 hover:text-slate-100 border-l border-white/10 ml-0.5 pl-2 transition-colors cursor-pointer"
+            className="p-1.5 text-stone-600 dark:text-slate-400 hover:text-stone-950 dark:hover:text-slate-100 border-l border-stone-200 dark:border-white/10 ml-0.5 pl-2 transition-colors cursor-pointer"
           >
             <Maximize2 className="w-3.5 h-3.5" />
           </button>
@@ -327,13 +327,13 @@ export const ArtworkViewport: React.FC<ArtworkViewportProps> = ({
 
         {/* Museum Specimen Card for Hovered / Selected Node */}
         {inspectedNode && (
-          <div className="absolute top-16 right-5 w-84 bg-[#090C13]/94 border border-white/15 rounded-md p-4 backdrop-blur-md shadow-xl">
+          <div className="absolute top-16 right-5 w-84 bg-[#FBF9F5]/96 dark:bg-[#090C13]/94 border border-stone-300 dark:border-white/15 rounded-md p-4 backdrop-blur-md shadow-xl">
             <div className="flex items-start justify-between gap-2">
               <div>
-                <div className="text-[11px] font-telemetry text-slate-400">
+                <div className="text-[11px] font-telemetry text-stone-500 dark:text-slate-400">
                   {inspectedNode.code} · {inspectedNode.regionGroup}
                 </div>
-                <h3 className="font-editorial text-2xl font-medium text-slate-100 leading-tight mt-0.5">
+                <h3 className="font-editorial text-2xl font-medium text-stone-900 dark:text-slate-100 leading-tight mt-0.5">
                   {inspectedNode.name}
                 </h3>
               </div>
@@ -341,14 +341,14 @@ export const ArtworkViewport: React.FC<ArtworkViewportProps> = ({
                 <button
                   onClick={() => onSelectNode(null)}
                   aria-label="Close specimen card"
-                  className="p-1 text-slate-400 hover:text-slate-100 cursor-pointer"
+                  className="p-1 text-stone-500 dark:text-slate-400 hover:text-stone-900 dark:hover:text-slate-100 cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
               )}
             </div>
 
-            <div className="text-xs text-slate-400 mt-1">
+            <div className="text-xs text-stone-600 dark:text-slate-400 mt-1">
               {inspectedNode.city}, {inspectedNode.country}
               <span aria-hidden="true"> · </span>
               <span className="font-telemetry">
@@ -356,57 +356,57 @@ export const ArtworkViewport: React.FC<ArtworkViewportProps> = ({
               </span>
             </div>
 
-            <p className="text-xs text-slate-300/90 leading-relaxed mt-3 pt-3 border-t border-white/[0.08]">
+            <p className="text-xs text-stone-700 dark:text-slate-300/90 leading-relaxed mt-3 pt-3 border-t border-stone-200 dark:border-white/[0.08]">
               {inspectedNode.description}
             </p>
 
-            <dl className="grid grid-cols-3 gap-x-3 gap-y-2.5 mt-3 pt-3 border-t border-white/[0.08]">
+            <dl className="grid grid-cols-3 gap-x-3 gap-y-2.5 mt-3 pt-3 border-t border-stone-200 dark:border-white/[0.08]">
               <div>
-                <dt className="text-[11px] text-slate-500">Power</dt>
-                <dd className="font-telemetry text-sm font-medium text-slate-100 mt-0.5">
+                <dt className="text-[11px] text-stone-500 dark:text-slate-500">Power</dt>
+                <dd className="font-telemetry text-sm font-medium text-stone-900 dark:text-slate-100 mt-0.5">
                   {inspectedNode.capacityMW} MW
                 </dd>
               </div>
               <div>
-                <dt className="text-[11px] text-slate-500">Renewables</dt>
-                <dd className="font-telemetry text-sm font-medium text-slate-100 mt-0.5">
+                <dt className="text-[11px] text-stone-500 dark:text-slate-500">Renewables</dt>
+                <dd className="font-telemetry text-sm font-medium text-stone-900 dark:text-slate-100 mt-0.5">
                   {inspectedNode.renewablePct}%
                 </dd>
               </div>
               <div>
-                <dt className="text-[11px] text-slate-500">PUE</dt>
-                <dd className="font-telemetry text-sm font-medium text-slate-100 mt-0.5">
+                <dt className="text-[11px] text-stone-500 dark:text-slate-500">PUE</dt>
+                <dd className="font-telemetry text-sm font-medium text-stone-900 dark:text-slate-100 mt-0.5">
                   {inspectedNode.pue.toFixed(2)}
                 </dd>
               </div>
               <div>
-                <dt className="text-[11px] text-slate-500">Rack Density</dt>
-                <dd className="font-telemetry text-xs text-slate-200 mt-0.5">
+                <dt className="text-[11px] text-stone-500 dark:text-slate-500">Rack Density</dt>
+                <dd className="font-telemetry text-xs text-stone-800 dark:text-slate-200 mt-0.5">
                   {inspectedNode.rackDensityKw} kW/rack
                 </dd>
               </div>
               <div>
-                <dt className="text-[11px] text-slate-500">Landings</dt>
-                <dd className="font-telemetry text-xs text-slate-200 mt-0.5">
+                <dt className="text-[11px] text-stone-500 dark:text-slate-500">Landings</dt>
+                <dd className="font-telemetry text-xs text-stone-800 dark:text-slate-200 mt-0.5">
                   {inspectedNode.subseaLandings} subsea
                 </dd>
               </div>
               <div>
-                <dt className="text-[11px] text-slate-500">Active Since</dt>
-                <dd className="font-telemetry text-xs text-slate-200 mt-0.5">
+                <dt className="text-[11px] text-stone-500 dark:text-slate-500">Active Since</dt>
+                <dd className="font-telemetry text-xs text-stone-800 dark:text-slate-200 mt-0.5">
                   {inspectedNode.commissionedYear}
                 </dd>
               </div>
             </dl>
 
-            <div className="mt-3 pt-3 border-t border-white/[0.08] space-y-1.5 text-[11px] text-slate-400">
+            <div className="mt-3 pt-3 border-t border-stone-200 dark:border-white/[0.08] space-y-1.5 text-[11px] text-stone-600 dark:text-slate-400">
               <div>
                 IXP / Fabric:{' '}
-                <span className="text-slate-200">{inspectedNode.ixpFabric}</span>
+                <span className="text-stone-900 dark:text-slate-200">{inspectedNode.ixpFabric}</span>
               </div>
               <div>
                 Operators:{' '}
-                <span className="text-slate-200">
+                <span className="text-stone-900 dark:text-slate-200">
                   {inspectedNode.providers
                     .map((p) => PROVIDER_META[p].shortLabel)
                     .join(' · ')}
@@ -414,7 +414,7 @@ export const ArtworkViewport: React.FC<ArtworkViewportProps> = ({
               </div>
               {inspectedLinks.length > 0 && (
                 <div className="pt-1">
-                  <div className="text-slate-500 mb-1">
+                  <div className="text-stone-500 dark:text-slate-500 mb-1">
                     Primary Fiber Links ({inspectedLinks.length}):
                   </div>
                   <div className="space-y-1 max-h-24 overflow-y-auto pr-1">
@@ -423,12 +423,12 @@ export const ArtworkViewport: React.FC<ArtworkViewportProps> = ({
                       return (
                         <div
                           key={c.id}
-                          className="flex items-center justify-between font-telemetry text-[11px] text-slate-300"
+                          className="flex items-center justify-between font-telemetry text-[11px] text-stone-800 dark:text-slate-300"
                         >
                           <span className="truncate pr-2">
                             {c.name} → {peerId.toUpperCase()}
                           </span>
-                          <span className="text-slate-400 shrink-0">
+                          <span className="text-stone-500 dark:text-slate-400 shrink-0">
                             {c.bandwidthTbps}T · {c.latencyMs}ms
                           </span>
                         </div>
